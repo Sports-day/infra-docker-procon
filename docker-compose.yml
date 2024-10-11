@@ -1,0 +1,99 @@
+services:
+  mysql:
+    image: mysql:lts
+    restart: always
+    environment:
+      - TZ=Asia/Tokyo
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=sports_day
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - "3003:80"
+    environment:
+      - TZ=Asia/Tokyo
+      - PMA_ARBITRARY=1
+      - PMA_HOSTS=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=password
+      - PMA_ABSOLUTE_URI=http://localhost:3003
+  api:
+    image: ghcr.io/sports-day/sportsdayapiprocon:main
+    restart: always
+    environment:
+      - TZ=Asia/Tokyo
+      - DATABASE_DB=sports_day
+      - DATABASE_HOST=mysql
+      - DATABASE_PASSWORD=password
+      - DATABASE_PORT=3306
+      - DATABASE_USER=root
+      - JWT_SECRET=
+      - JWT_ISSUER=localhost
+      - JWT_EXPIRE_MINUTE=7200
+      - JWT_REALMS=localhost
+      - COOKIE_SECURE=false
+      - OIDC_CLIENT_ID=
+      - OIDC_CLIENT_SECRET=
+      - OIDC_TOKEN_ENDPOINT=/oauth2/v2.0/token
+      - OIDC_JWKS_ENDPOINT=/discovery/keys
+      - OIDC_USERINFO_ENDPOINT=oidc/userinfo
+      - OIDC_ISSUER=/v2.0
+      - OIDC_REDIRECT_URL=http://localhost:3000/api/auth/callback http://localhost:3001/api/auth/callback http://localhost:3002/api/auth/callback
+      - OIDC_SCOPE=openid profile email user.read
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+  panel:
+    image: ghcr.io/sports-day/sports-day-panel-procon:main
+    restart: always
+    environment:
+      - TZ=Asia/Tokyo
+      - NEXT_PUBLIC_API_URL=http://localhost:8080/v1
+      - NEXT_PUBLIC_API_INTERNAL_URL=http://localhost:8080/v1
+      - NEXT_PUBLIC_OIDC_CLIENT_ID=ze2ykHlVRRnf0at+QyMTUYnye3o0OzddxraVNg6Hpw0=
+      - NEXT_PUBLIC_OIDC_AUTHORIZE_URL=/oauth2/v2.0/authorize
+      - NEXT_PUBLIC_OIDC_SCOPE=openid profile email user.read
+      - NEXT_PUBLIC_OIDC_DISPLAY_NAME=サインイン
+      - NEXT_PUBLIC_OIDC_REDIRECT_URL=http://localhost:3000/api/auth/callback
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+  admin:
+    image: ghcr.io/sports-day/sports-day-admin-procon:main
+    restart: always
+    environment:
+      - TZ=Asia/Tokyo
+      - NEXT_PUBLIC_API_URL=http://localhost:8080/v1
+      - NEXT_PUBLIC_API_INTERNAL_URL=http://localhost:8080/v1
+      - NEXT_PUBLIC_OIDC_CLIENT_ID=
+      - NEXT_PUBLIC_OIDC_AUTHORIZE_URL=/oauth2/v2.0/authorize
+      - NEXT_PUBLIC_OIDC_SCOPE=openid profile email user.read
+      - NEXT_PUBLIC_OIDC_DISPLAY_NAME=サインイン
+      - NEXT_PUBLIC_OIDC_REDIRECT_URL=http://localhost:3001/api/auth/callback
+    ports:
+      - "3001:3000"
+    depends_on:
+      - api
+  form:
+    image: ghcr.io/sports-day/sports-day-form-procon:main
+    restart: always
+    environment:
+      - TZ=Asia/Tokyo
+      - NEXT_PUBLIC_API_URL=http://localhost:8080/v1
+      - NEXT_PUBLIC_API_INTERNAL_URL=http://localhost:8080/v1
+      - NEXT_PUBLIC_OIDC_CLIENT_ID=
+      - NEXT_PUBLIC_OIDC_AUTHORIZE_URL=/oauth2/v2.0/authorize
+      - NEXT_PUBLIC_OIDC_SCOPE=openid profile email user.read
+      - NEXT_PUBLIC_OIDC_DISPLAY_NAME=サインイン
+      - NEXT_PUBLIC_OIDC_REDIRECT_URL=http://localhost:3002/api/auth/callback
+    ports:
+      - "3002:3000"
+    depends_on:
+      - api
