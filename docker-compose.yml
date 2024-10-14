@@ -32,19 +32,11 @@ services:
       - DATABASE_PASSWORD=password
       - DATABASE_PORT=3306
       - DATABASE_USER=root
-      - JWT_SECRET=
+      - JWT_SECRET=ze2ykHlVRRnf0at+QyMTUYnye3o0OzddxraVNg6Hpw0=
       - JWT_ISSUER=localhost
       - JWT_EXPIRE_MINUTE=7200
       - JWT_REALMS=localhost
       - COOKIE_SECURE=false
-      - OIDC_CLIENT_ID=
-      - OIDC_CLIENT_SECRET=
-      - OIDC_TOKEN_ENDPOINT=/oauth2/v2.0/token
-      - OIDC_JWKS_ENDPOINT=/discovery/keys
-      - OIDC_USERINFO_ENDPOINT=oidc/userinfo
-      - OIDC_ISSUER=/v2.0
-      - OIDC_REDIRECT_URL=http://localhost:3000/api/auth/callback http://localhost:3001/api/auth/callback http://localhost:3002/api/auth/callback
-      - OIDC_SCOPE=openid profile email user.read
     ports:
       - "8080:8080"
     depends_on:
@@ -54,13 +46,8 @@ services:
     restart: always
     environment:
       - TZ=Asia/Tokyo
-      - NEXT_PUBLIC_API_URL=http://localhost:8080/v1
-      - NEXT_PUBLIC_API_INTERNAL_URL=http://localhost:8080/v1
-      - NEXT_PUBLIC_OIDC_CLIENT_ID=ze2ykHlVRRnf0at+QyMTUYnye3o0OzddxraVNg6Hpw0=
-      - NEXT_PUBLIC_OIDC_AUTHORIZE_URL=/oauth2/v2.0/authorize
-      - NEXT_PUBLIC_OIDC_SCOPE=openid profile email user.read
-      - NEXT_PUBLIC_OIDC_DISPLAY_NAME=サインイン
-      - NEXT_PUBLIC_OIDC_REDIRECT_URL=http://localhost:3000/api/auth/callback
+      - NEXT_PUBLIC_API_URL=http://host.docker.internal:8080/v1
+      - NEXT_PUBLIC_API_INTERNAL_URL=http://host.docker.internal:8080/v1
     ports:
       - "3000:3000"
     depends_on:
@@ -70,13 +57,8 @@ services:
     restart: always
     environment:
       - TZ=Asia/Tokyo
-      - NEXT_PUBLIC_API_URL=http://localhost:8080/v1
-      - NEXT_PUBLIC_API_INTERNAL_URL=http://localhost:8080/v1
-      - NEXT_PUBLIC_OIDC_CLIENT_ID=
-      - NEXT_PUBLIC_OIDC_AUTHORIZE_URL=/oauth2/v2.0/authorize
-      - NEXT_PUBLIC_OIDC_SCOPE=openid profile email user.read
-      - NEXT_PUBLIC_OIDC_DISPLAY_NAME=サインイン
-      - NEXT_PUBLIC_OIDC_REDIRECT_URL=http://localhost:3001/api/auth/callback
+      - NEXT_PUBLIC_API_URL=http://host.docker.internal:8080/v1
+      - NEXT_PUBLIC_API_INTERNAL_URL=http://host.docker.internal:8080/v1
     ports:
       - "3001:3000"
     depends_on:
@@ -86,13 +68,8 @@ services:
     restart: always
     environment:
       - TZ=Asia/Tokyo
-      - NEXT_PUBLIC_API_URL=http://localhost:8080/v1
-      - NEXT_PUBLIC_API_INTERNAL_URL=http://localhost:8080/v1
-      - NEXT_PUBLIC_OIDC_CLIENT_ID=
-      - NEXT_PUBLIC_OIDC_AUTHORIZE_URL=/oauth2/v2.0/authorize
-      - NEXT_PUBLIC_OIDC_SCOPE=openid profile email user.read
-      - NEXT_PUBLIC_OIDC_DISPLAY_NAME=サインイン
-      - NEXT_PUBLIC_OIDC_REDIRECT_URL=http://localhost:3002/api/auth/callback
+      - NEXT_PUBLIC_API_URL=http://host.docker.internal:8080/v1
+      - NEXT_PUBLIC_API_INTERNAL_URL=http://host.docker.internal:8080/v1
     ports:
       - "3002:3000"
     depends_on:
